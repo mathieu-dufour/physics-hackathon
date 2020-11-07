@@ -1,18 +1,23 @@
 export const p5script = (p5) => {
     // Body falling in non-newtonian fluid
     let ball;
-    // let fluid;
+    let fluid;
 
     p5.setup = () => {
         p5.createCanvas(500, 500);
         reset();
 
-        // fluid = new Fluid(0, p5.height / 2, p5.width, p5.height / 2, 0.1)
+        fluid = new Fluid(0, p5.height / 1.5, p5.width, p5.height / 3, 0.1)
     }
 
     p5.draw = () => {
         p5.background(245);
-        // fluid.display();
+        fluid.display();
+
+        if (fluid.contains(ball)) {
+            let dragForce = fluid.calculateDrag(ball);
+            ball.applyForce(dragForce);
+        }
 
         let gravity = p5.createVector(0, 0.1 * ball.mass);
         ball.display();
@@ -66,31 +71,46 @@ export const p5script = (p5) => {
                 this.position.y = (p5.height - this.mass * 8);
             }
         }
-
-
     }
 
-    // // Non-Newtonian fluid in which mover falls
-    // class Fluid {
-    //     constructor(x, y, width, height, c) {
-    //         this.x = x;
-    //         this.y = y;
-    //         this.width = width;
-    //         this.height = height;
-    //         this.c = c;
-    //     }
+    // Non-Newtonian fluid in which mover falls
+    class Fluid {
+        constructor(x, y, width, height, coefficient) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.coef = coefficient;
+        }
 
-    //     // Display fluid on canvas
-    //     display() {
-    //         p5.noStroke();
-    //         p5.fill(0, 195, 255);
-    //         p5.rect(this.x, this.y, this.width, this.height);
-    //     }
+        // Display fluid on canvas
+        display() {
+            p5.noStroke();
+            p5.fill(0, 195, 255);
+            p5.rect(this.x, this.y, this.width, this.height);
+        }
 
-    //     // Check if mover is in liquid
-    //     contains(mover) {
-    //         let mover_y = mover.position.y;
-    //         return mover_y > this.y && mover_y < this.y + this.height;
-    //     }
-    // }
+        // Check if mover is in liquid
+        contains(mover) {
+            let mover_y = mover.position.y;
+            return mover_y > this.y && mover_y < this.y + this.height;
+        }
+
+        calculateDrag(mover) {
+            // Speed is magnitude of mover velocity vector
+            let speed = mover.velocity.mag();
+            //Magnitude is coefficient * squared speed
+            let dragMagnitude = this.coef * speed * speed;
+
+            // Direction is inverse of velocity
+            let dragForce = mover.velocity.copy();
+            dragForce.mult(-1);
+
+            // Scale according to magnitude
+            // dragForce.setMag(dragMagnitude);
+            dragForce.normalize();
+            dragForce.mult(dragMagnitude);
+            return dragForce;
+        }
+    }
 }

@@ -9,6 +9,7 @@
                     <v-card>
                         <v-card-title>Simulator Properties</v-card-title>
                         <v-card-text>
+                            <v-container>
                                 <v-row>
                                     <v-col cols="4">
                                         <v-subheader>Object mass</v-subheader>
@@ -20,6 +21,13 @@
                                                 v-model.number="objectMass"
                                         ></v-text-field>
                                     </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-slider
+                                            v-model.number="objectMass"
+                                            :min="minObjectMass"
+                                            :max="maxObjectMass"
+                                    />
                                 </v-row>
                                 <v-row>
                                     <v-col cols="4">
@@ -34,6 +42,13 @@
                                     </v-col>
                                 </v-row>
                                 <v-row>
+                                    <v-slider
+                                            v-model="objectDiameter"
+                                            :min="minObjectDiameter"
+                                            :max="maxObjectDiameter"
+                                    />
+                                </v-row>
+                                <v-row>
                                     <v-col cols="4">
                                         <v-subheader>Fluid type</v-subheader>
                                     </v-col>
@@ -46,6 +61,7 @@
                                         ></v-select>
                                     </v-col>
                                 </v-row>
+                            </v-container>
                         </v-card-text>
                     </v-card>
                 </v-col>
@@ -62,8 +78,15 @@
         name: "PhysicsSimulator",
         components: {PoolSideView},
         data: () => ({
-            objectMass: 10,
-            objectDiameter: 10,
+            // constants
+            minObjectMass: 1,
+            maxObjectMass: 1000,
+            minObjectDiameter: 1,
+            maxObjectDiameter: 1000,
+
+            // variables
+            objectMass: 100,
+            objectDiameter: 200,
             selectedFluid: FluidList[0],
             fluidList: FluidList,
         }),
@@ -71,5 +94,7 @@
 </script>
 
 <style scoped>
-
+.v-subheader {
+    padding: 0;
+}
 </style>

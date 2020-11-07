@@ -16,12 +16,14 @@ export const p5script = (p5) => {
         const canvas = p5.createCanvas(canvasWidth, canvasHeight);
         canvas.parent("canvas-wrapper")
 
+        // Reset mover position when canvas is clicked
+        canvas.mousePressed(reset);
+
         fluid = new Fluid(0, p5.height / 1.5, p5.width, p5.height / 3, 0.1)
         reset();
     }
 
     p5.draw = () => {
-        // p5.background(245);
         p5.background("grey")
 
         fluid.display();

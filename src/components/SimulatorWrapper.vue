@@ -7,12 +7,12 @@
                 </v-col>
                 <v-col cols="4">
                     <v-card>
-                        <v-card-title>Simulator Properties</v-card-title>
+                        <v-card-title>Object Properties</v-card-title>
                         <v-card-text>
                             <v-container>
                                 <v-row>
                                     <v-col cols="4">
-                                        <v-subheader>Object mass</v-subheader>
+                                        <v-subheader>Mass</v-subheader>
                                     </v-col>
                                     <v-col cols="8">
                                         <v-text-field
@@ -31,7 +31,7 @@
                                 </v-row>
                                 <v-row>
                                     <v-col cols="4">
-                                        <v-subheader>Object diameter</v-subheader>
+                                        <v-subheader>Diameter</v-subheader>
                                     </v-col>
                                     <v-col cols="8">
                                         <v-text-field
@@ -48,9 +48,16 @@
                                             :max="maxObjectDiameter"
                                     />
                                 </v-row>
+                            </v-container>
+                        </v-card-text>
+                    </v-card>
+                    <v-card class="mt-5">
+                        <v-card-title>Fluid properties</v-card-title>
+                        <v-card-text>
+                            <v-container>
                                 <v-row>
                                     <v-col cols="4">
-                                        <v-subheader>Fluid type</v-subheader>
+                                        <v-subheader>Type</v-subheader>
                                     </v-col>
                                     <v-col cols="8">
                                         <v-select

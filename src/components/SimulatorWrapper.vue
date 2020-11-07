@@ -3,7 +3,10 @@
         <v-container>
             <v-row>
                 <v-col cols="8">
-                    <PoolSideView></PoolSideView>
+                    <PoolSideView
+                            :objectDiameter="objectDiameter"
+                            :objectMass="objectMass"
+                    ></PoolSideView>
                 </v-col>
                 <v-col cols="4">
                     <v-card>
@@ -52,9 +55,9 @@
                         </v-card-text>
                     </v-card>
                     <v-card class="mt-5">
-                        <v-card-title>Fluid properties</v-card-title>
+                        <v-card-title>Fluid Properties</v-card-title>
                         <v-card-text>
-                            <v-container>
+                            <v-container fluid>
                                 <v-row>
                                     <v-col cols="4">
                                         <v-subheader>Type</v-subheader>
@@ -67,6 +70,13 @@
                                                 item-value="id"
                                         ></v-select>
                                     </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-sparkline
+                                            :value="selectedFluid.shearStressVsShearStrain"
+                                            auto-draw
+                                            :line-width="4"
+                                    ></v-sparkline>
                                 </v-row>
                             </v-container>
                         </v-card-text>
@@ -96,12 +106,12 @@
             objectDiameter: 200,
             selectedFluid: FluidList[0],
             fluidList: FluidList,
-        }),
+        })
     }
 </script>
 
 <style scoped>
-.v-subheader {
-    padding: 0;
-}
+    .v-subheader {
+        padding: 0;
+    }
 </style>

@@ -1,17 +1,29 @@
+let canvasWidth = 500;
+let canvasHeight = 500;
+
+export const setCanvasDimensions = (width, height) => {
+    canvasWidth = width;
+    canvasHeight = height;
+}
+
+
 export const p5script = (p5) => {
     // Body falling in non-newtonian fluid
     let ball;
     let fluid;
 
-    p5.setup = () => {
-        p5.createCanvas(500, 500);
-        reset();
+    p5.setup = () => {        
+        const canvas = p5.createCanvas(canvasWidth, canvasHeight);
+        canvas.parent("canvas-wrapper")
 
         fluid = new Fluid(0, p5.height / 1.5, p5.width, p5.height / 3, 0.1)
+        reset();
     }
 
     p5.draw = () => {
-        p5.background(245);
+        // p5.background(245);
+        p5.background("grey")
+
         fluid.display();
 
         if (fluid.contains(ball)) {

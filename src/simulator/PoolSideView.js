@@ -21,7 +21,7 @@ export const setMoverMass = (mass) => {
     moverMass = mass;
 }
 
-let PIXEL_TO_METER = CANVAS_HEIGHT_METER / canvasHeight;
+let pixelToMeter = () => CANVAS_HEIGHT_METER / canvasHeight;
 
 export const p5script = (p5) => {
     // Body falling in non-newtonian fluid
@@ -41,6 +41,7 @@ export const p5script = (p5) => {
     }
 
     p5.draw = () => {
+        console.log(ball)
         p5.background("grey")
 
         fluid.display();
@@ -58,7 +59,7 @@ export const p5script = (p5) => {
 
     // Reset ball to initial position
     function reset() {
-        ball = new Mover(moverMass, moverRadius / PIXEL_TO_METER, p5.width / 2, p5.height * 0.25);
+        ball = new Mover(moverMass, moverRadius / pixelToMeter(), p5.width / 2, p5.height * 0.25);
     }
 
     // Body falling in non-newtonian fluid
@@ -80,7 +81,7 @@ export const p5script = (p5) => {
         // Newton's 2nd law: F = M * A
         // or A = F / M
         applyForce(force) {
-            let acceleration = force.div(this.mass).mult(Math.pow(FRAME_PER_SECOND, 1)).mult(PIXEL_TO_METER)
+            let acceleration = force.div(this.mass).mult(Math.pow(FRAME_PER_SECOND, 1)).mult(pixelToMeter())
             this.acceleration.add(acceleration);
         }
 
@@ -131,7 +132,7 @@ export const p5script = (p5) => {
 
         calculateDragForce(mover) {
             // Speed is magnitude of mover velocity vector
-            let speed = PIXEL_TO_METER * mover.velocity.mag() * FRAME_PER_SECOND; // m/s
+            let speed = pixelToMeter() * mover.velocity.mag() * FRAME_PER_SECOND; // m/s
             //Magnitude is coefficient * squared speed
             // Assume drag coefficient is 0.5 for a sphere
             let dragMagnitude = (1 / 4) * p5.PI * Math.pow(mover.radius, 2) * this.density * Math.pow(speed, 2);

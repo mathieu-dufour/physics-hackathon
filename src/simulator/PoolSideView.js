@@ -63,11 +63,11 @@ export const p5script = (p5) => {
         canvas.style("border-radius", "4px")
 
         // TODO: Change images
-        basket = p5.loadImage('wrecking_ball.png');
-        kinball = p5.loadImage('wrecking_ball.png');
-        beachball = p5.loadImage('wrecking_ball.png');
-        bowling = p5.loadImage('wrecking_ball.png')
-        globe = p5.loadImage('wrecking_ball.png')
+        basket = p5.loadImage('basketballmodified.png');
+        kinball = p5.loadImage('kinball.png');
+        beachball = p5.loadImage('beachball.png');
+        bowling = p5.loadImage('bowling.png')
+        globe = p5.loadImage('globe.png')
 
         // Reset mover position when canvas is clicked
         canvas.mousePressed(() => reset(p5.mouseY));

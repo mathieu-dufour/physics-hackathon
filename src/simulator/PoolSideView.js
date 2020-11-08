@@ -134,8 +134,8 @@ export const p5script = (p5) => {
             // Speed is magnitude of mover velocity vector
             let speed = pixelToMeter() * mover.velocity.mag() * FRAME_PER_SECOND; // m/s
             //Magnitude is coefficient * squared speed
-            // Assume drag coefficient is 0.5 for a sphere
-            let dragMagnitude = (1 / 4) * p5.PI * Math.pow(mover.radius, 2) * this.density * Math.pow(speed, 2);
+            // Assume drag coefficient is 0.25 for a sphere
+            let dragMagnitude = (1 / 4) * p5.PI * Math.pow(mover.radius * pixelToMeter(), 2) * this.density * Math.pow(speed, 2);
 
             // Direction is inverse of velocity
             return mover.velocity.copy().normalize().mult(-dragMagnitude);

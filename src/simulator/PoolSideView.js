@@ -102,6 +102,9 @@ export const p5script = (p5) => {
         update() {
             // Velocity changes according to acceleration
             this.velocity += this.acceleration;
+            if (((this.position > (p5.height - this.radius)) == false) && this.velocity < 0) {
+                this.velocity = 0;
+            }
             // position changes by velocity
             this.position += this.velocity;
             // We must clear acceleration each frame

@@ -3,12 +3,17 @@
         <v-container>
             <v-row>
                 <v-col cols="8">
-                    <PoolSideView
-                            :objectDiameter="objectDiameter"
-                            :objectMass="objectMass"
-                            :selectedFluid="selectedFluid"
-                            @plot-data-change="plotDataHandler"
-                    ></PoolSideView>
+                    <v-card>
+                        <v-card-text>
+                            <v-img src="@/assets/big-logo.png" max-height="100"></v-img>
+                            <PoolSideView
+                                    :objectDiameter="objectDiameter"
+                                    :objectMass="objectMass"
+                                    :selectedFluid="selectedFluid"
+                                    @plot-data-change="plotDataHandler"
+                            ></PoolSideView>
+                        </v-card-text>
+                    </v-card>
                 </v-col>
                 <v-col cols="4">
                     <v-card>
@@ -74,7 +79,7 @@
                                     </v-col>
                                 </v-row>
                                 <v-row id="viscosity-plot-wrapper">
-                                    <viscosity-plot :width="viscosityPlotWidth" :data="viscosityPlotData"/>
+                                    <viscosity-plot :width="viscosityPlotWidth" :height="300" :data="viscosityPlotData"/>
                                 </v-row>
                             </v-container>
                         </v-card-text>

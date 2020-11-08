@@ -60,6 +60,8 @@ export const p5script = (p5) => {
         const canvas = p5.createCanvas(canvasWidth, canvasHeight);
         canvas.parent("canvas-wrapper")
 
+        canvas.style("border-radius", "4px")
+
         // TODO: Change images
         basket = p5.loadImage('wrecking_ball.png');
         kinball = p5.loadImage('wrecking_ball.png');
@@ -196,6 +198,7 @@ export const p5script = (p5) => {
             this.height = height; // pixels
             this.density = fluidProperties.density; // kg/m^3
             this.viscosityFunction = fluidProperties.viscosityFunction;
+            this.backgroundColor = fluidProperties.backgroundColor;
 
             this.ballInitialVelocity = undefined; // set on initial ball impact
             this.theta = 0; // Start angle at 0
@@ -211,7 +214,7 @@ export const p5script = (p5) => {
         // Display fluid on canvas
         display() {
             p5.noStroke();
-            p5.fill(0, 195, 255);
+            p5.fill(this.backgroundColor);
             p5.rect(this.x, this.y, this.width, this.height);
         }
 
@@ -267,7 +270,7 @@ export const p5script = (p5) => {
 
         renderWave() {
             p5.noStroke();
-            p5.fill(0, 195, 255);
+            p5.fill(this.backgroundColor);
             p5.beginShape();
             p5.vertex(0, p5.height)
             for (let x = 0; x < this.yvalues.length; x++) {

@@ -100,8 +100,8 @@
             maxObjectDiameter: 100,
 
             // variables
-            objectMass: 100,
-            objectDiameter: 200,
+            objectMass: 800,
+            objectDiameter: 15,
             selectedFluid: FluidList[0],
             selectedViscosityFunction: FluidList[0].viscosityFunction,
             fluidList: FluidList,

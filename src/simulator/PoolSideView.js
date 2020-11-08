@@ -204,7 +204,7 @@ export const p5script = (p5) => {
             this.theta = 0; // Start angle at 0
             this.thetaGrowthRate = 0.2 * Math.pow(fluidProperties.viscosityCoefficient, 0.35);
     
-            this.amplitude = (5 * moverMass + moverRadius * 1.5) * Math.pow(fluidProperties.viscosityCoefficient, 1.5); // Height of wave
+            this.amplitude = (5 * moverMass + moverRadius * 1.5) * Math.pow(fluidProperties.viscosityCoefficient, 2.5); // Height of wave
             console.log(this.amplitude)
             this.period = (30 + moverRadius * 50); // How many pixels before the wave repeats
             this.dx; // Value for incrementing x

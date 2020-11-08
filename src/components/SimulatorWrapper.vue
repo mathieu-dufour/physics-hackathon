@@ -6,6 +6,7 @@
                     <PoolSideView
                             :objectDiameter="objectDiameter"
                             :objectMass="objectMass"
+                            :viscosityFunction="selectedViscosityFunction"
                     ></PoolSideView>
                 </v-col>
                 <v-col cols="4">
@@ -105,8 +106,14 @@
             objectMass: 100,
             objectDiameter: 200,
             selectedFluid: FluidList[0],
+            selectedViscosityFunction: FluidList[0].viscosityFunction,
             fluidList: FluidList,
-        })
+        }),
+        watch:{
+            selectedFluid(fluid) {
+                this.selectedViscosityFunction = FluidList.filter((f) => f.id === fluid)[0].viscosityFunction;
+            }
+        }
     }
 </script>
 

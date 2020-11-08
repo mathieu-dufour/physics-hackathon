@@ -50,9 +50,22 @@ export const p5script = (p5) => {
     let ball;
     let fluid;
 
+    let basket;
+    let kinball;
+    let beachball;
+    let bowling;
+    let globe;
+
     p5.setup = () => {
         const canvas = p5.createCanvas(canvasWidth, canvasHeight);
         canvas.parent("canvas-wrapper")
+
+        // TODO: Change images
+        basket = p5.loadImage('wrecking_ball.png');
+        kinball = p5.loadImage('wrecking_ball.png');
+        beachball = p5.loadImage('wrecking_ball.png');
+        bowling = p5.loadImage('wrecking_ball.png')
+        globe = p5.loadImage('wrecking_ball.png')
 
         // Reset mover position when canvas is clicked
         canvas.mousePressed(() => reset(p5.mouseY));
@@ -119,7 +132,26 @@ export const p5script = (p5) => {
         display() {
             p5.noStroke();
             p5.fill(255, 42, 0);
-            p5.circle(p5.width / 2, this.position, this.radius * 2);
+
+            let selectedImage;
+            if (this.radius > 0.30/pixelToMeter()){
+                if (this.mass > 0.5) {
+                    selectedImage = globe;
+                } else {
+                    selectedImage = kinball;
+                }
+
+            } else {
+                if (this.mass <= 1 && this.mass >= 0.66){
+                    selectedImage = bowling;
+                } else if (this.mass >0.33 && this.mass < 0.66){
+                    selectedImage = basket;
+                }
+                else  {
+                    selectedImage = beachball;
+                }
+            }
+            p5.image(selectedImage, p5.width / 2 - this.radius, this.position- this.radius,this.radius * 2,this.radius * 2);
         }
 
         // Newton's 2nd law: F = M * A

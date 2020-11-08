@@ -11,10 +11,10 @@ export default [
         "name": "Corn starch",
         "viscosityFunction": function (velocity) {
             // TODO: Change corn starch viscosity function
-            if (velocity > 5){
-                console.log("corn")
-                return 200000000000 * velocity
-            } else {return 0.00000000002 * velocity}
+            //if (velocity > 5){
+                //console.log("corn")
+                return 40 * Math.exp(velocity)
+            //} else {return 0.0002 * velocity}
         }
     }
 ]

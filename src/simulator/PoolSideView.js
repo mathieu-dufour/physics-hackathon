@@ -146,11 +146,11 @@ export const p5script = (p5) => {
             this.viscosityFunction = viscosityFunction;
 
             this.theta = 0; // Start angle at 0
-            this.amplitude = 40.0; // Height of wave
-            this.period = 40.0; // How many pixels before the wave repeats
+            this.amplitude = moverMass * 100 + moverRadius * 30; // Height of wave
+            this.period = 30 + moverRadius * 50; // How many pixels before the wave repeats
             this.dx; // Value for incrementing x
             this.yvalues; // Using an array to store height values for the wave
-            this.decay = 0.08; // Increasingly reduce value by this factor
+            this.decay = 0.07; // Increasingly reduce value by this factor
             this.dx = (p5.TWO_PI / this.period);
             this.yvalues = new Array(width);
         }

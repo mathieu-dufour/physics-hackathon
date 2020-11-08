@@ -150,7 +150,7 @@ export const p5script = (p5) => {
             this.period = 30 + moverRadius * 50; // How many pixels before the wave repeats
             this.dx; // Value for incrementing x
             this.yvalues; // Using an array to store height values for the wave
-            this.decay = 0.07; // Increasingly reduce value by this factor
+            this.decay = 0.068; // Increasingly reduce value by this factor
             this.dx = (p5.TWO_PI / this.period);
             this.yvalues = new Array(width);
         }

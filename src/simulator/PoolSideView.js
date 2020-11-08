@@ -67,9 +67,13 @@ export const p5script = (p5) => {
         }
         p5.background("grey")
 
-        fluid.display();
+        if (!fluid.contains(ball)) {
+            fluid.display();
+        }
 
         if (fluid.contains(ball)) {
+            fluid.calcWave();
+            fluid.renderWave();
             let dragForce = fluid.calculateDragForce(ball);
             ball.applyForce(dragForce);
             let buoyancyForce = fluid.calculateBuoyancy(ball);
@@ -156,6 +160,15 @@ export const p5script = (p5) => {
             this.height = height; // pixels
             this.density = density; // kg/m^3
             this.viscosityFunction = viscosityFunction;
+
+            this.theta = 0; // Start angle at 0
+            this.amplitude = moverMass * 100 + moverRadius * 30; // Height of wave
+            this.period = 30 + moverRadius * 50; // How many pixels before the wave repeats
+            this.dx; // Value for incrementing x
+            this.yvalues; // Using an array to store height values for the wave
+            this.decay = 0.068; // Increasingly reduce value by this factor
+            this.dx = (p5.TWO_PI / this.period);
+            this.yvalues = new Array(width);
         }
 
         // Display fluid on canvas
@@ -194,6 +207,34 @@ export const p5script = (p5) => {
             let spherearea = 4 * p5.PI * Math.pow(mover.radius * pixelToMeter(), 2);
             let viscousMagnitude = this.viscosityFunction(speed) * spherearea;
             return Math.sign(mover.velocity) * -viscousMagnitude;
+        }
+
+        calcWave() {
+            // Increment theta (try different values for
+            // 'angular velocity' here)
+            this.theta += 0.2;
+
+            // For every x value, calculate a y value with sine function
+            let x = this.theta;
+            for (let i = p5.width / 2 - 1; i >= 0; i--) {
+                let y = this.amplitude * p5.exp(-this.decay * x) * p5.cos(this.dx * x - this.theta);
+                this.yvalues[i] = y;
+                this.yvalues[p5.width - i] = y;
+                //yvalues[t] = sin(x) * amplitude;
+                x += this.dx;
+            }
+        }
+
+        renderWave() {
+            p5.noStroke();
+            p5.fill(0, 195, 255);
+            p5.beginShape();
+            p5.vertex(0, p5.height)
+            for (let x = 0; x < this.yvalues.length; x++) {
+                p5.vertex(x, this.height * 2 + this.yvalues[x])
+            }
+            p5.vertex(p5.width, p5.height);
+            p5.endShape();
         }
     }
 }

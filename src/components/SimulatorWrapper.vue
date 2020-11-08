@@ -6,7 +6,7 @@
                     <PoolSideView
                             :objectDiameter="objectDiameter"
                             :objectMass="objectMass"
-                            :viscosityFunction="selectedViscosityFunction"
+                            :selectedFluid="selectedFluid"
                             @plot-data-change="plotDataHandler"
                     ></PoolSideView>
                 </v-col>
@@ -74,7 +74,7 @@
                                     </v-col>
                                 </v-row>
                                 <v-row id="viscosity-plot-wrapper">
-                                    <viscosity-plot :width="viscosityPlotWidth" :data="viscosityPlotData" />
+                                    <viscosity-plot :width="viscosityPlotWidth" :data="viscosityPlotData"/>
                                 </v-row>
                             </v-container>
                         </v-card-text>
@@ -103,19 +103,13 @@
             // variables
             objectMass: 800,
             objectDiameter: 15,
-            selectedFluid: FluidList[0],
-            selectedViscosityFunction: FluidList[0].viscosityFunction,
+            selectedFluid: FluidList[0].id,
             fluidList: FluidList,
             viscosityPlotWidth: 0,
             viscosityPlotData: [],
         }),
         mounted() {
-              this.viscosityPlotWidth = document.getElementById("viscosity-plot-wrapper").offsetWidth;
-        },
-        watch:{
-            selectedFluid(fluid) {
-                this.selectedViscosityFunction = FluidList.filter((f) => f.id === fluid)[0].viscosityFunction;
-            }
+            this.viscosityPlotWidth = document.getElementById("viscosity-plot-wrapper").offsetWidth;
         },
         methods: {
             plotDataHandler(plotData) {

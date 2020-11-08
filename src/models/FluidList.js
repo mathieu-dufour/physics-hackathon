@@ -4,7 +4,8 @@ export default [
         "name": "Water",
         "viscosityFunction": function (velocity) {
             return 0.002 * velocity
-        }
+        },
+        "density": 997
     },
     {
         "id": "cornstarch",
@@ -15,6 +16,7 @@ export default [
                 console.log("corn")
                 return 200000000000 * velocity
             } else {return 0.00000000002 * velocity}
-        }
+        },
+        "density": 700
     }
 ]

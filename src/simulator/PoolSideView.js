@@ -1,9 +1,11 @@
 // inputs
+import FluidList from "../models/FluidList";
+
 let canvasWidth = 500;
 let canvasHeight = 500;
 let moverRadius = 100;
 let moverMass = 100;
-let fluidViscosityFunction = undefined;
+let fluidProperties = undefined;
 let resetOnNextFrame = false;
 let plotDataHandler;
 let plotData = [];
@@ -12,7 +14,6 @@ const CANVAS_HEIGHT_METER = 5;
 const FRAME_PER_SECOND = 60;
 const GRAVITATIONAL_CONSTANT = 9.81;
 const WATER_DRAG_COEFFICIENT = 0.5;
-const WATER_DENSITY = 997;
 
 // plot settings
 const MAX_PLOT_POINTS = 100;
@@ -30,8 +31,8 @@ export const setMoverMass = (mass) => {
     moverMass = mass;
 }
 
-export const setFluidViscosityFunction = (viscosityFunction) => {
-    fluidViscosityFunction = viscosityFunction;
+export const setFluidById = (fluidId) => {
+    fluidProperties = FluidList.filter((f) => f.id === fluidId)[0];
 }
 
 export const setPlotDataHandler = (handler) => {
@@ -99,7 +100,7 @@ export const p5script = (p5) => {
         plotData = [];
         plotDataHandler(plotData)
         ball = new Mover(moverMass, moverRadius / pixelToMeter(), p5.height * 0.25);
-        fluid = new Fluid(0, p5.height / 1.5, p5.width, p5.height / 3, WATER_DENSITY, fluidViscosityFunction);
+        fluid = new Fluid(0, p5.height / 1.5, p5.width, p5.height / 3, fluidProperties);
     }
 
     // Body falling in non-newtonian fluid
@@ -153,13 +154,13 @@ export const p5script = (p5) => {
 
     // Non-Newtonian fluid in which mover falls
     class Fluid {
-        constructor(x, y, width, height, density, viscosityFunction) {
+        constructor(x, y, width, height, fluidProperties) {
             this.x = x; // pixels
             this.y = y; // pixels
             this.width = width; // pixels
             this.height = height; // pixels
-            this.density = density; // kg/m^3
-            this.viscosityFunction = viscosityFunction;
+            this.density = fluidProperties.density; // kg/m^3
+            this.viscosityFunction = fluidProperties.viscosityFunction;
 
             this.theta = 0; // Start angle at 0
             this.amplitude = moverMass * 100 + moverRadius * 30; // Height of wave

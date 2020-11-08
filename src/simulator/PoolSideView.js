@@ -3,6 +3,7 @@ let canvasWidth = 500;
 let canvasHeight = 500;
 let moverRadius = 100;
 let moverMass = 100;
+let resetOnNextFrame = false;
 
 const CANVAS_HEIGHT_METER = 5;
 const FRAME_PER_SECOND = 60;
@@ -19,6 +20,10 @@ export const setMoverRadius = (radius) => {
 
 export const setMoverMass = (mass) => {
     moverMass = mass;
+}
+
+export const reset = () => {
+    resetOnNextFrame = true;
 }
 
 let pixelToMeter = () => CANVAS_HEIGHT_METER / canvasHeight;
@@ -41,7 +46,10 @@ export const p5script = (p5) => {
     }
 
     p5.draw = () => {
-        console.log(ball)
+        if (resetOnNextFrame) {
+            reset();
+            resetOnNextFrame = false;
+        }
         p5.background("grey")
 
         fluid.display();

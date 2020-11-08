@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    import {p5script, setCanvasDimensions, setMoverRadius, setMoverMass} from "../simulator/PoolSideView";
+    import {p5script, setCanvasDimensions, setMoverRadius, setMoverMass, reset} from "../simulator/PoolSideView";
     import P5 from "p5"
 
     export default {
@@ -26,9 +26,11 @@
         watch: {
             objectDiameter(diameter) {
                 setMoverRadius(diameter / (2 * 100));
+                reset()
             },
             objectMass(mass) {
                 setMoverMass(mass / 1000)
+                reset()
             }
         }
     }

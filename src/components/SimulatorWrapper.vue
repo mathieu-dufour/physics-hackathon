@@ -99,7 +99,7 @@
             minObjectMass: 1,
             maxObjectMass: 1000,
             minObjectDiameter: 1,
-            maxObjectDiameter: 1000,
+            maxObjectDiameter: 100,
 
             // variables
             objectMass: 100,

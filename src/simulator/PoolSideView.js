@@ -10,6 +10,7 @@ const FRAME_PER_SECOND = 60;
 const GRAVITATIONAL_CONSTANT = 9.81;
 const WATER_DRAG_COEFFICIENT = 0.5;
 const WATER_DENSITY = 997;
+const WATER_VISCOSITY = 0.002;
 
 export const setCanvasDimensions = (width, height) => {
     canvasWidth = width;
@@ -42,7 +43,7 @@ export const p5script = (p5) => {
         // Reset mover position when canvas is clicked
         canvas.mousePressed(reset);
 
-        fluid = new Fluid(0, p5.height / 1.5, p5.width, p5.height / 3, WATER_DENSITY)
+        fluid = new Fluid(0, p5.height / 1.5, p5.width, p5.height / 3, WATER_DENSITY,WATER_VISCOSITY)
         reset();
         p5.frameRate(FRAME_PER_SECOND);
     }
@@ -59,6 +60,10 @@ export const p5script = (p5) => {
         if (fluid.contains(ball)) {
             let dragForce = fluid.calculateDragForce(ball);
             ball.applyForce(dragForce);
+            let buoyancyForce = fluid.calculateBuoyancy(ball);
+            ball.applyForce(-buoyancyForce);
+            let viscousForce = fluid.calculateViscousforce(ball);
+            ball.applyForce(viscousForce);
         }
         let gravity = GRAVITATIONAL_CONSTANT * ball.mass;
         ball.display();
@@ -123,12 +128,13 @@ export const p5script = (p5) => {
 
     // Non-Newtonian fluid in which mover falls
     class Fluid {
-        constructor(x, y, width, height, density) {
+        constructor(x, y, width, height, density,viscosity) {
             this.x = x; // pixels
             this.y = y; // pixels
             this.width = width; // pixels
             this.height = height; // pixels
             this.density = density; // kg/m^3
+            this.viscosity = viscosity;
         }
 
         // Display fluid on canvas
@@ -154,6 +160,18 @@ export const p5script = (p5) => {
 
             // Direction is inverse of velocity
             return Math.sign(mover.velocity) * -dragMagnitude;
+        }
+        calculateBuoyancy(mover) {
+            let volume = p5.PI * Math.pow(mover.radius * pixelToMeter(), 3);
+            let buoyancyMagnitude = 4/3*p5.PI*volume;
+            return buoyancyMagnitude;
+        }
+
+        calculateViscousforce(mover) {
+            let speed = pixelToMeter() * mover.velocity * FRAME_PER_SECOND; // m/s
+            let spherearea = p5.PI * Math.pow(mover.radius * pixelToMeter(), 2);
+            let viscousMagnitude = this.viscosity* spherearea*speed;
+            return Math.sign(mover.velocity) * -viscousMagnitude;
         }
     }
 }

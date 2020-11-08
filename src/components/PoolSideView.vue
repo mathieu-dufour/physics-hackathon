@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    import {p5script, setCanvasDimensions, setMoverRadius, setMoverMass, setFluidViscosityFunction, reset} from "../simulator/PoolSideView";
+    import {p5script, setCanvasDimensions, setMoverRadius, setMoverMass, setFluidViscosityFunction, reset, setPlotDataHandler} from "../simulator/PoolSideView";
     import P5 from "p5"
 
     export default {
@@ -18,6 +18,7 @@
             setMoverRadius(this.objectDiameter / (2 * 100));
             setMoverMass(this.objectMass / 1000);
             setFluidViscosityFunction(this.viscosityFunction);
+            setPlotDataHandler((plotData) => {this.$emit("plot-data-change", plotData)})
 
             new P5(p5script)
         },

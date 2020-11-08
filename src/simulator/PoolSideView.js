@@ -5,12 +5,17 @@ let moverRadius = 100;
 let moverMass = 100;
 let fluidViscosityFunction = undefined;
 let resetOnNextFrame = false;
+let plotDataHandler;
+let plotData = [];
 
 const CANVAS_HEIGHT_METER = 5;
 const FRAME_PER_SECOND = 60;
 const GRAVITATIONAL_CONSTANT = 9.81;
 const WATER_DRAG_COEFFICIENT = 0.5;
 const WATER_DENSITY = 997;
+
+// plot settings
+const MAX_PLOT_POINTS = 100;
 
 export const setCanvasDimensions = (width, height) => {
     canvasWidth = width;
@@ -27,6 +32,10 @@ export const setMoverMass = (mass) => {
 
 export const setFluidViscosityFunction = (viscosityFunction) => {
     fluidViscosityFunction = viscosityFunction;
+}
+
+export const setPlotDataHandler = (handler) => {
+    plotDataHandler = handler;
 }
 
 export const reset = () => {
@@ -73,10 +82,18 @@ export const p5script = (p5) => {
         ball.applyForce(gravity);
         ball.update();
         ball.checkBottomEdge();
+
+        // Add data points to the plot
+        if (plotData.length < MAX_PLOT_POINTS && fluid.contains(ball)) {
+            plotData.push({x: (ball.position - p5.height + fluid.height) * pixelToMeter(), y: ball.velocity})
+        }
+        plotDataHandler(plotData)
     }
 
     // Reset ball to initial position
     function reset() {
+        plotData = [];
+        plotDataHandler(plotData)
         ball = new Mover(moverMass, moverRadius / pixelToMeter(), p5.height * 0.25);
         fluid = new Fluid(0, p5.height / 1.5, p5.width, p5.height / 3, WATER_DENSITY, fluidViscosityFunction);
     }
@@ -111,14 +128,13 @@ export const p5script = (p5) => {
         update() {
             // Velocity changes according to acceleration
             this.velocity += this.acceleration;
-            if (((this.position > (p5.height - this.radius)) == false) && this.velocity < 0) {
+            if (!(this.position > (p5.height - this.radius)) && this.velocity < 0) {
                 this.velocity = 0;
             }
             // position changes by velocity
             this.position += this.velocity;
             // We must clear acceleration each frame
             this.acceleration = 0;
-            console.log(this.velocity)
         }
 
         // Bounce of bottom edge

@@ -163,11 +163,20 @@ export const p5script = (p5) => {
             this.viscosityFunction = fluidProperties.viscosityFunction;
 
             this.theta = 0; // Start angle at 0
-            this.amplitude = moverMass * 100 + moverRadius * 30; // Height of wave
+            
+            let viscosityCoefficient = 1;
+            if(fluidProperties.id == 'cornstarch') {
+                viscosityCoefficient = 0.75;
+                this.color = (242, 242, 225);
+            } else {
+                viscosityCoefficient = 0.75;
+                this.color = (0, 195, 255);
+            }
+            this.amplitude = moverMass * 100 + moverRadius * 30 * viscosityCoefficient; // Height of wave
             this.period = 30 + moverRadius * 50; // How many pixels before the wave repeats
             this.dx; // Value for incrementing x
             this.yvalues; // Using an array to store height values for the wave
-            this.decay = 0.068; // Increasingly reduce value by this factor
+            this.decay = 0.068 * viscosityCoefficient; // Increasingly reduce value by this factor
             this.dx = (p5.TWO_PI / this.period);
             this.yvalues = new Array(width);
         }
@@ -175,7 +184,7 @@ export const p5script = (p5) => {
         // Display fluid on canvas
         display() {
             p5.noStroke();
-            p5.fill(0, 195, 255);
+            p5.fill(this.color);
             p5.rect(this.x, this.y, this.width, this.height);
         }
 
@@ -228,7 +237,7 @@ export const p5script = (p5) => {
 
         renderWave() {
             p5.noStroke();
-            p5.fill(0, 195, 255);
+            p5.fill(this.color);
             p5.beginShape();
             p5.vertex(0, p5.height)
             for (let x = 0; x < this.yvalues.length; x++) {

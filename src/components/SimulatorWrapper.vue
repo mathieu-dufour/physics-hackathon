@@ -72,12 +72,8 @@
                                         ></v-select>
                                     </v-col>
                                 </v-row>
-                                <v-row>
-                                    <v-sparkline
-                                            :value="selectedFluid.shearStressVsShearStrain"
-                                            auto-draw
-                                            :line-width="4"
-                                    ></v-sparkline>
+                                <v-row id="viscosity-plot-wrapper">
+                                    <viscosity-plot :width="viscosityPlotWidth" />
                                 </v-row>
                             </v-container>
                         </v-card-text>
@@ -91,10 +87,11 @@
 <script>
     import PoolSideView from "./PoolSideView";
     import FluidList from "../models/FluidList";
+    import ViscosityPlot from "./ViscosityPlot";
 
     export default {
         name: "PhysicsSimulator",
-        components: {PoolSideView},
+        components: {ViscosityPlot, PoolSideView},
         data: () => ({
             // constants
             minObjectMass: 1,
@@ -108,7 +105,11 @@
             selectedFluid: FluidList[0],
             selectedViscosityFunction: FluidList[0].viscosityFunction,
             fluidList: FluidList,
+            viscosityPlotWidth: 0,
         }),
+        mounted() {
+              this.viscosityPlotWidth = document.getElementById("viscosity-plot-wrapper").offsetWidth;
+        },
         watch:{
             selectedFluid(fluid) {
                 this.selectedViscosityFunction = FluidList.filter((f) => f.id === fluid)[0].viscosityFunction;

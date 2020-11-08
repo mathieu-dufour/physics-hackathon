@@ -81,7 +81,10 @@ export const p5script = (p5) => {
         // Newton's 2nd law: F = M * A
         // or A = F / M
         applyForce(force) {
-            let acceleration = force.div(this.mass).mult(Math.pow(FRAME_PER_SECOND, 1)).mult(pixelToMeter())
+            let accelerationSI = force.div(this.mass); // m/s^2
+
+            // px / frame^2 = m/s^2 * s^2/frame^2 * px/m
+            let acceleration = accelerationSI.div(Math.pow(FRAME_PER_SECOND, 2)).div(pixelToMeter())
             this.acceleration.add(acceleration);
         }
 

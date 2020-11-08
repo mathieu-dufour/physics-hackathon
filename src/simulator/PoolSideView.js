@@ -202,11 +202,14 @@ export const p5script = (p5) => {
 
             this.ballInitialVelocity = undefined; // set on initial ball impact
             this.theta = 0; // Start angle at 0
-            this.amplitude = 5 * moverMass + moverRadius * 1.5; // Height of wave
-            this.period = 30 + moverRadius * 50; // How many pixels before the wave repeats
+            this.thetaGrowthRate = 0.2 * Math.pow(fluidProperties.viscosityCoefficient, 0.35);
+    
+            this.amplitude = (5 * moverMass + moverRadius * 1.5) * Math.pow(fluidProperties.viscosityCoefficient, 1.5); // Height of wave
+            console.log(this.amplitude)
+            this.period = (30 + moverRadius * 50); // How many pixels before the wave repeats
             this.dx; // Value for incrementing x
             this.yvalues; // Using an array to store height values for the wave
-            this.decay = 0.068 * viscosityCoefficient; // Increasingly reduce value by this factor
+            this.decay = 0.068 * fluidProperties.viscosityCoefficient; // Increasingly reduce value by this factor
             this.dx = (p5.TWO_PI / this.period);
             this.yvalues = new Array(width);
         }
@@ -253,9 +256,8 @@ export const p5script = (p5) => {
                 this.ballInitialVelocity = ballVelocity
             }
 
-            // Increment theta (try different values for
-            // 'angular velocity' here)
-            this.theta += 0.2;
+            // Increment theta (angular velocity)
+            this.theta += this.thetaGrowthRate;
 
             // For every x value, calculate a y value with sine function
             let x = this.theta;

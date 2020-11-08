@@ -6,7 +6,8 @@ export default [
             return 0.002 * velocity
         },
         "density": 997,
-        "backgroundColor": "#00c3ff"
+        "backgroundColor": "#00c3ff",
+        "viscosityCoefficient": 1
     },
     {
         "id": "cornstarch",
@@ -15,6 +16,7 @@ export default [
             return 40 * Math.exp(velocity)
         },
         "density": 600,
-        "backgroundColor": "white"
+        "backgroundColor": "white",
+        "viscosityCoefficient": 0.6
     }
 ]

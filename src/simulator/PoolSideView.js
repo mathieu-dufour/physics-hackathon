@@ -55,14 +55,10 @@ export const p5script = (p5) => {
         canvas.parent("canvas-wrapper")
 
         // Reset mover position when canvas is clicked
-        canvas.mousePressed(reset);
+        canvas.mousePressed(() => reset(p5.mouseY));
 
         reset();
         p5.frameRate(FRAME_PER_SECOND);
-    }
-
-    p5.mousePressed = () => {
-        reset(p5.mouseY)
     }
 
     p5.draw = () => {
@@ -171,7 +167,7 @@ export const p5script = (p5) => {
 
             this.ballInitialVelocity = undefined; // set on initial ball impact
             this.theta = 0; // Start angle at 0
-            this.amplitude = moverMass + moverRadius * 0.3; // Height of wave
+            this.amplitude = 5 * moverMass + moverRadius * 1.5; // Height of wave
             this.period = 30 + moverRadius * 50; // How many pixels before the wave repeats
             this.dx; // Value for incrementing x
             this.yvalues; // Using an array to store height values for the wave

@@ -21,6 +21,18 @@
                     legend: {
                         display: false
                     },
+                    tooltips: {
+                        callbacks: {
+                            title() {
+                                return ""
+                            },
+                            label: function(tooltipItem) {
+                                let speed = Math.round(tooltipItem.yLabel * 100) / 100;
+                                let depth = Math.round(tooltipItem.xLabel * 100) / 100;
+                                return `Speed: ${speed} m/s, depth: ${depth} m`;
+                            }
+                        }
+                    },
                     scales: {
                         xAxes: [{
                             type: "linear",

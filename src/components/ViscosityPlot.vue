@@ -13,7 +13,7 @@
                     datasets: [{
                         data: data,
                         backgroundColor: 'rgba(255, 99, 132, 0.0)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderColor: '#00c3ff',
                         borderWidth: 1
                     }]
                 }, {

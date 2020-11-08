@@ -81,7 +81,7 @@ export const p5script = (p5) => {
             reset();
             resetOnNextFrame = false;
         }
-        p5.background("grey")
+        p5.background("#3a3a3a")
 
         if (!fluid.contains(ball)) {
             fluid.display();

@@ -5,6 +5,7 @@
                 <v-col cols="8">
                     <v-card>
                         <v-card-text>
+                            <v-img src="@/assets/big-logo.png" max-height="100"></v-img>
                             <PoolSideView
                                     :objectDiameter="objectDiameter"
                                     :objectMass="objectMass"
@@ -78,7 +79,7 @@
                                     </v-col>
                                 </v-row>
                                 <v-row id="viscosity-plot-wrapper">
-                                    <viscosity-plot :width="viscosityPlotWidth" height="300" :data="viscosityPlotData"/>
+                                    <viscosity-plot :width="viscosityPlotWidth" :height="300" :data="viscosityPlotData"/>
                                 </v-row>
                             </v-container>
                         </v-card-text>

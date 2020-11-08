@@ -61,6 +61,10 @@ export const p5script = (p5) => {
         p5.frameRate(FRAME_PER_SECOND);
     }
 
+    p5.mousePressed = () => {
+        reset(p5.mouseY)
+    }
+
     p5.draw = () => {
         if (resetOnNextFrame) {
             reset();
@@ -73,7 +77,7 @@ export const p5script = (p5) => {
         }
 
         if (fluid.contains(ball)) {
-            fluid.calcWave();
+            fluid.calcWave(ball.velocity);
             fluid.renderWave();
             let dragForce = fluid.calculateDragForce(ball);
             ball.applyForce(dragForce);
@@ -96,10 +100,13 @@ export const p5script = (p5) => {
     }
 
     // Reset ball to initial position
-    function reset() {
+    function reset(yBallPosition) {
+        if (!yBallPosition || yBallPosition > p5.height / 1.5) {
+            yBallPosition = p5.height * 0.25
+        }
         plotData = [];
         plotDataHandler(plotData)
-        ball = new Mover(moverMass, moverRadius / pixelToMeter(), p5.height * 0.25);
+        ball = new Mover(moverMass, moverRadius / pixelToMeter(), yBallPosition);
         fluid = new Fluid(0, p5.height / 1.5, p5.width, p5.height / 3, fluidProperties);
     }
 
@@ -162,8 +169,9 @@ export const p5script = (p5) => {
             this.density = fluidProperties.density; // kg/m^3
             this.viscosityFunction = fluidProperties.viscosityFunction;
 
+            this.ballInitialVelocity = undefined; // set on initial ball impact
             this.theta = 0; // Start angle at 0
-            this.amplitude = moverMass * 100 + moverRadius * 30; // Height of wave
+            this.amplitude = moverMass + moverRadius * 0.3; // Height of wave
             this.period = 30 + moverRadius * 50; // How many pixels before the wave repeats
             this.dx; // Value for incrementing x
             this.yvalues; // Using an array to store height values for the wave
@@ -199,8 +207,7 @@ export const p5script = (p5) => {
 
         calculateBuoyancy(mover) {
             let volume = p5.PI * Math.pow(mover.radius * pixelToMeter(), 3);
-            let buoyancyMagnitude = 4 / 3 * p5.PI * volume;
-            return buoyancyMagnitude;
+            return 4 / 3 * p5.PI * volume;
         }
 
         calculateViscousforce(mover) {
@@ -210,7 +217,11 @@ export const p5script = (p5) => {
             return Math.sign(mover.velocity) * -viscousMagnitude;
         }
 
-        calcWave() {
+        calcWave(ballVelocity) {
+            if (!this.ballInitialVelocity) {
+                this.ballInitialVelocity = ballVelocity
+            }
+
             // Increment theta (try different values for
             // 'angular velocity' here)
             this.theta += 0.2;
@@ -218,7 +229,7 @@ export const p5script = (p5) => {
             // For every x value, calculate a y value with sine function
             let x = this.theta;
             for (let i = p5.width / 2 - 1; i >= 0; i--) {
-                let y = this.amplitude * p5.exp(-this.decay * x) * p5.cos(this.dx * x - this.theta);
+                let y = this.ballInitialVelocity * this.amplitude * p5.exp(-this.decay * x) * p5.cos(this.dx * x - this.theta);
                 this.yvalues[i] = y;
                 this.yvalues[p5.width - i] = y;
                 //yvalues[t] = sin(x) * amplitude;

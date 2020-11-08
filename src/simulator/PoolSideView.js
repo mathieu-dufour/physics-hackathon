@@ -118,6 +118,7 @@ export const p5script = (p5) => {
             this.position += this.velocity;
             // We must clear acceleration each frame
             this.acceleration = 0;
+            console.log(this.velocity)
         }
 
         // Bounce of bottom edge

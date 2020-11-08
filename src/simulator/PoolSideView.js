@@ -8,6 +8,8 @@ let resetOnNextFrame = false;
 const CANVAS_HEIGHT_METER = 5;
 const FRAME_PER_SECOND = 60;
 const GRAVITATIONAL_CONSTANT = 9.81;
+const WATER_DRAG_COEFFICIENT = 0.5;
+const WATER_DENSITY = 997;
 
 export const setCanvasDimensions = (width, height) => {
     canvasWidth = width;
@@ -40,7 +42,7 @@ export const p5script = (p5) => {
         // Reset mover position when canvas is clicked
         canvas.mousePressed(reset);
 
-        fluid = new Fluid(0, p5.height / 1.5, p5.width, p5.height / 3, 10)
+        fluid = new Fluid(0, p5.height / 1.5, p5.width, p5.height / 3, WATER_DENSITY)
         reset();
         p5.frameRate(FRAME_PER_SECOND);
     }
@@ -58,7 +60,7 @@ export const p5script = (p5) => {
             let dragForce = fluid.calculateDragForce(ball);
             ball.applyForce(dragForce);
         }
-        let gravity = p5.createVector(0, GRAVITATIONAL_CONSTANT * ball.mass);
+        let gravity = GRAVITATIONAL_CONSTANT * ball.mass;
         ball.display();
         ball.applyForce(gravity);
         ball.update();
@@ -67,51 +69,51 @@ export const p5script = (p5) => {
 
     // Reset ball to initial position
     function reset() {
-        ball = new Mover(moverMass, moverRadius / pixelToMeter(), p5.width / 2, p5.height * 0.25);
+        ball = new Mover(moverMass, moverRadius / pixelToMeter(), p5.height * 0.25);
     }
 
     // Body falling in non-newtonian fluid
     class Mover {
-        constructor(mass, radius, x, y) {
+        constructor(mass, radius, y) {
             this.mass = mass; // kg
             this.radius = radius; // pixels
-            this.position = p5.createVector(x, y); // pixels
-            this.velocity = p5.createVector(0, 0); // pixels / frame
-            this.acceleration = p5.createVector(0, 0); // pixels / frame^2
+            this.position = y // pixels
+            this.velocity = 0; // pixels / frame
+            this.acceleration = 0; // pixels / frame^2
         }
 
         display() {
             p5.noStroke();
             p5.fill(255, 42, 0);
-            p5.circle(this.position.x, this.position.y, this.radius * 2);
+            p5.circle(p5.width / 2, this.position, this.radius * 2);
         }
 
         // Newton's 2nd law: F = M * A
         // or A = F / M
         applyForce(force) {
-            let accelerationSI = force.div(this.mass); // m/s^2
+            let accelerationSI = force / this.mass; // m/s^2
 
             // px / frame^2 = m/s^2 * s^2/frame^2 * px/m
-            let acceleration = accelerationSI.div(Math.pow(FRAME_PER_SECOND, 2)).div(pixelToMeter())
-            this.acceleration.add(acceleration);
+            let acceleration = accelerationSI / (Math.pow(FRAME_PER_SECOND, 2) * pixelToMeter());
+            this.acceleration += acceleration;
         }
 
         // Update position based on velocity
         update() {
             // Velocity changes according to acceleration
-            this.velocity.add(this.acceleration);
+            this.velocity += this.acceleration;
             // position changes by velocity
-            this.position.add(this.velocity);
+            this.position += this.velocity;
             // We must clear acceleration each frame
-            this.acceleration.mult(0);
+            this.acceleration = 0;
         }
 
         // Bounce of bottom edge
         checkBottomEdge() {
-            if (this.position.y > (p5.height - this.radius)) {
+            if (this.position > (p5.height - this.radius)) {
                 // A little dampening when hitting the bottom
-                this.velocity.y *= -0.9;
-                this.position.y = (p5.height - this.radius);
+                this.velocity *= -0.9;
+                this.position = (p5.height - this.radius);
             }
         }
     }
@@ -137,19 +139,18 @@ export const p5script = (p5) => {
         contains(mover) {
             // TODO: Calculate surface of mover touching the fluid
             // TODO: Calculate volume of mover in the fluid
-            let mover_y = mover.position.y;
-            return mover_y > this.y && mover_y < this.y + this.height;
+            return mover.position > this.y && mover.position < this.y + this.height;
         }
 
         calculateDragForce(mover) {
             // Speed is magnitude of mover velocity vector
-            let speed = pixelToMeter() * mover.velocity.mag() * FRAME_PER_SECOND; // m/s
+            let speed = pixelToMeter() * mover.velocity * FRAME_PER_SECOND; // m/s
             //Magnitude is coefficient * squared speed
-            // Assume drag coefficient is 0.25 for a sphere
-            let dragMagnitude = (1 / 4) * p5.PI * Math.pow(mover.radius * pixelToMeter(), 2) * this.density * Math.pow(speed, 2);
+            let area = p5.PI * Math.pow(mover.radius * pixelToMeter(), 2);
+            let dragMagnitude = (1 / 2) * WATER_DRAG_COEFFICIENT * area * this.density * Math.pow(speed, 2);
 
             // Direction is inverse of velocity
-            return mover.velocity.copy().normalize().mult(-dragMagnitude);
+            return Math.sign(mover.velocity) * -dragMagnitude;
         }
     }
 }
